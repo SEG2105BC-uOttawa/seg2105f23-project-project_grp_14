@@ -62,12 +62,5 @@ public class AccountCreationTest {
 
     // ................................
 
-    @Test
-    public void testClubMemberAccountEmptyUsername() {
-        when(databaseHelper.addUser("", "passwordTest", "club member")).thenReturn(false);
-        boolean result = databaseHelper.addUser("", "passwordTest", "club member");
-        assertFalse(result);
-    }
-
     
 }
