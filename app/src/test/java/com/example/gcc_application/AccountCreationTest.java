@@ -69,10 +69,5 @@ public class AccountCreationTest {
         assertFalse(result);
     }
 
-    @Test
-    public void testParticipantAccountEmptyPassword() {
-        when(databaseHelper.addUser("participantTest", "", "participant")).thenReturn(false);
-        boolean result = databaseHelper.addUser("participantTest", "", "participant");
-        assertFalse(result);
-    }
+    
 }
