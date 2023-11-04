@@ -52,7 +52,7 @@ public class LoginActivity extends AppCompatActivity {
                     // Successful login
                     String userRole = databaseHelper.getUserRole(username, password); // Fetch user role
 
-                    Intent intent = new Intent(LoginActivity.this, WelcomeActivity.class);
+                    Intent intent = new Intent(LoginActivity.this, LoginAdminSuccess.class);//change this to test admin
                     intent.putExtra("USERNAME", username);
                     intent.putExtra("ROLE", userRole); // Pass the role to WelcomeActivity
                     startActivity(intent);

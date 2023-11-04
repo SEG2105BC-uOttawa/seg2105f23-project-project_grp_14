@@ -1,7 +1,10 @@
 package com.example.gcc_application;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.View;
+import android.widget.EditText;
 
 import androidx.appcompat.app.AppCompatActivity;
 
@@ -18,6 +21,8 @@ public class MainActivity extends AppCompatActivity {
         } else {
             Log.d("Database", "Error adding admin account");
         }
+
+        startActivity(new Intent(MainActivity.this, LoginActivity.class));
 
     }
 }

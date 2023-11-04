@@ -6,6 +6,8 @@ import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
+import java.util.ArrayList;
+
 
 public class DatabaseHelper extends SQLiteOpenHelper {
     private static final String DATABASE_NAME = "userdatabase";
@@ -80,4 +82,133 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         cursor.close();
         return exists;
     }
+}
+
+class EventDatabaseHelper extends SQLiteOpenHelper {
+    private static final String DATABASE_NAME = "eventdatabase";
+    private static final int DATABASE_VERSION = 2;
+    private static final String TABLE_EVENT = "events";
+    private static final String COLUMN_ID = "id";
+    private static final String COLUMN_EVENT_NAME = "event_name";
+    private static final String COLUMN_EVENT_TYPE = "event_type";
+    private static final String COLUMN_DETAILS = "event_details";
+    private static final String COLUMN_REQUIREMENTS = "event_requirements";
+
+    private static final String CREATE_EVENT_TABLE = "CREATE TABLE " + TABLE_EVENT + "("
+            + COLUMN_ID + " INTEGER PRIMARY KEY AUTOINCREMENT,"
+            + COLUMN_EVENT_NAME + " TEXT,"
+            + COLUMN_EVENT_TYPE + " TEXT,"
+            + COLUMN_DETAILS + " TEXT,"
+            + COLUMN_REQUIREMENTS + " TEXT" + ")";
+
+    public EventDatabaseHelper(Context context) {
+        super(context, DATABASE_NAME, null, DATABASE_VERSION);
+    }
+
+    @Override
+    public void onCreate(SQLiteDatabase db) {
+        db.execSQL(CREATE_EVENT_TABLE);
+    }
+
+    @Override
+    public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
+        db.execSQL("DROP TABLE IF EXISTS " + TABLE_EVENT);
+        onCreate(db);
+    }
+
+    public String getEventType(String event_name) {
+        SQLiteDatabase db = this.getReadableDatabase();
+        Cursor cursor = db.rawQuery("SELECT " + COLUMN_EVENT_TYPE + " FROM " + TABLE_EVENT + " WHERE " + COLUMN_EVENT_NAME + "=?", new String[]{event_name});
+
+        if (cursor != null && cursor.moveToFirst()) {
+            @SuppressLint("Range") String role = cursor.getString(cursor.getColumnIndex(COLUMN_EVENT_TYPE));
+            cursor.close();
+            return role;
+        } else {
+            return null;
+        }
+    }
+
+    public String getEventDetails(String event_name) {
+        SQLiteDatabase db = this.getReadableDatabase();
+        Cursor cursor = db.rawQuery("SELECT " + COLUMN_DETAILS + " FROM " + TABLE_EVENT + " WHERE " + COLUMN_EVENT_NAME + "=?", new String[]{event_name});
+
+        if (cursor != null && cursor.moveToFirst()) {
+            @SuppressLint("Range") String role = cursor.getString(cursor.getColumnIndex(COLUMN_DETAILS));
+            cursor.close();
+            return role;
+        } else {
+            return null;
+        }
+    }
+
+    public String getEventRequirements(String event_name) {
+        SQLiteDatabase db = this.getReadableDatabase();
+        Cursor cursor = db.rawQuery("SELECT " + COLUMN_REQUIREMENTS + " FROM " + TABLE_EVENT + " WHERE " + COLUMN_EVENT_NAME + "=?", new String[]{event_name});
+
+        if (cursor != null && cursor.moveToFirst()) {
+            @SuppressLint("Range") String role = cursor.getString(cursor.getColumnIndex(COLUMN_REQUIREMENTS));
+            cursor.close();
+            return role;
+        } else {
+            return null;
+        }
+    }
+
+    public boolean addEvent(String eventName, String eventType, String eventDetails, String eventRequirements) {
+        SQLiteDatabase db = this.getWritableDatabase();
+
+        ContentValues values = new ContentValues();
+        values.put(COLUMN_EVENT_NAME, eventName);
+        values.put(COLUMN_EVENT_TYPE, eventType);
+        values.put(COLUMN_DETAILS, eventDetails);
+        values.put(COLUMN_REQUIREMENTS, eventRequirements);
+
+        long result = db.insert(TABLE_EVENT, null, values);
+        db.close();
+
+        return result != -1;
+    }
+
+    // Method to retrieve all records from the table
+    public ArrayList getAllRecords() {
+        ArrayList<String> events = new ArrayList<>();
+
+        SQLiteDatabase db = this.getReadableDatabase();
+        Cursor cursor = db.rawQuery("SELECT " + COLUMN_EVENT_NAME + " FROM " + TABLE_EVENT, null);
+
+        if (cursor.moveToFirst()) {
+            do {
+                @SuppressLint("Range") String eventName = cursor.getString(cursor.getColumnIndex(COLUMN_EVENT_NAME));
+                events.add(eventName);
+            } while (cursor.moveToNext());
+        }
+
+        cursor.close();
+        db.close();
+        return events;
+    }
+
+    public boolean deleteEvent(String eventName) {
+        SQLiteDatabase db = this.getWritableDatabase();
+
+        int result = db.delete(TABLE_EVENT, COLUMN_EVENT_NAME + "=?", new String[]{eventName});
+        db.close();
+
+        return result > 0;
+    }
+
+    public boolean editEvent(String eventName, String editField, String replacement) {
+        SQLiteDatabase db = this.getWritableDatabase();
+
+        ContentValues cv = new ContentValues();
+        cv.put(editField, replacement);
+
+        int rowsUpdated = db.update(TABLE_EVENT, cv, null, null);
+
+        db.close();
+
+        return rowsUpdated > 0;
+    }
+
 }
