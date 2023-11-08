@@ -51,8 +51,14 @@ public class LoginActivity extends AppCompatActivity {
                 if (databaseHelper.validateUser(username, password)) {
                     // Successful login
                     String userRole = databaseHelper.getUserRole(username, password); // Fetch user role
-
-                    Intent intent = new Intent(LoginActivity.this, WelcomeActivity.class);
+                    Intent intent = new Intent();
+                    if (databaseHelper.getUserRole(username, password).equals("admin")){
+                         intent = new Intent(LoginActivity.this, LoginAdminSuccess.class);//change this to test admin
+                    } else if (databaseHelper.getUserRole(username, password).equals("Club member")){
+                         intent = new Intent(LoginActivity.this, LoginClubMemberSuccess.class);//change this to test admin
+                    } else if (databaseHelper.getUserRole(username, password).equals("Participant")){
+                         intent = new Intent(LoginActivity.this, LoginParticipantSuccess.class);//change this to test admin
+                    }
                     intent.putExtra("USERNAME", username);
                     intent.putExtra("ROLE", userRole); // Pass the role to WelcomeActivity
                     startActivity(intent);
