@@ -82,6 +82,39 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         cursor.close();
         return exists;
     }
+
+    public ArrayList getUsers(String role) {
+        ArrayList<String> users = new ArrayList<>();
+        int duplicate = 0;//variable used to stop duplicates from being added to array list
+
+        SQLiteDatabase db = this.getReadableDatabase();
+        Cursor cursor = db.rawQuery("SELECT " + COLUMN_USERNAME + ", " + COLUMN_PASSWORD + " FROM " + TABLE_USER, null);
+        if (cursor.moveToFirst()) {
+            do {
+                @SuppressLint("Range") String user = cursor.getString(cursor.getColumnIndex(COLUMN_USERNAME));
+                @SuppressLint("Range") String password = cursor.getString(cursor.getColumnIndex(COLUMN_PASSWORD));
+
+                if (this.getUserRole(user, password).equals(role) && duplicate<1) {
+                    users.add(user);
+                    duplicate++;
+                } else if (duplicate >= 1){
+                    duplicate = 0;
+                }
+            } while (cursor.moveToNext());
+        }
+        cursor.close();
+        db.close();
+        return users;
+    }
+
+    public boolean deleteUser(String user) {
+        SQLiteDatabase db = this.getWritableDatabase();
+
+        int result = db.delete(TABLE_USER, COLUMN_USERNAME + "=?", new String[]{user});
+        db.close();
+
+        return result > 0;
+    }
 }
 
 class EventDatabaseHelper extends SQLiteOpenHelper {
@@ -121,9 +154,9 @@ class EventDatabaseHelper extends SQLiteOpenHelper {
         Cursor cursor = db.rawQuery("SELECT " + COLUMN_EVENT_TYPE + " FROM " + TABLE_EVENT + " WHERE " + COLUMN_EVENT_NAME + "=?", new String[]{event_name});
 
         if (cursor != null && cursor.moveToFirst()) {
-            @SuppressLint("Range") String role = cursor.getString(cursor.getColumnIndex(COLUMN_EVENT_TYPE));
+            @SuppressLint("Range") String type = cursor.getString(cursor.getColumnIndex(COLUMN_EVENT_TYPE));
             cursor.close();
-            return role;
+            return type;
         } else {
             return null;
         }
@@ -147,13 +180,14 @@ class EventDatabaseHelper extends SQLiteOpenHelper {
         Cursor cursor = db.rawQuery("SELECT " + COLUMN_REQUIREMENTS + " FROM " + TABLE_EVENT + " WHERE " + COLUMN_EVENT_NAME + "=?", new String[]{event_name});
 
         if (cursor != null && cursor.moveToFirst()) {
-            @SuppressLint("Range") String role = cursor.getString(cursor.getColumnIndex(COLUMN_REQUIREMENTS));
+            @SuppressLint("Range") String requirements = cursor.getString(cursor.getColumnIndex(COLUMN_REQUIREMENTS));
             cursor.close();
-            return role;
+            return requirements;
         } else {
             return null;
         }
     }
+
 
     public boolean addEvent(String eventName, String eventType, String eventDetails, String eventRequirements) {
         SQLiteDatabase db = this.getWritableDatabase();
@@ -198,17 +232,41 @@ class EventDatabaseHelper extends SQLiteOpenHelper {
         return result > 0;
     }
 
-    public boolean editEvent(String eventName, String editField, String replacement) {
+    public boolean editEvent(String defaultEventName, String eventName, String eventType, String eventDetails, String eventRequirements) {
         SQLiteDatabase db = this.getWritableDatabase();
 
         ContentValues cv = new ContentValues();
-        cv.put(editField, replacement);
+        cv.put(COLUMN_EVENT_NAME, eventName);
+        cv.put(COLUMN_EVENT_TYPE, eventType);
+        cv.put(COLUMN_DETAILS, eventDetails);
+        cv.put(COLUMN_REQUIREMENTS, eventRequirements);
 
-        int rowsUpdated = db.update(TABLE_EVENT, cv, null, null);
+        int rowsUpdated = db.update(TABLE_EVENT, cv, "event_name=?", new String[]{defaultEventName});
 
         db.close();
 
         return rowsUpdated > 0;
     }
+
+
+    @SuppressLint("Range")
+    public boolean eventNameExists (String eventName){
+        SQLiteDatabase db = this.getReadableDatabase();
+        Cursor cursor = db.rawQuery("SELECT " + COLUMN_EVENT_NAME + " FROM " + TABLE_EVENT, null);
+
+        if (cursor.moveToFirst()) {
+            do {
+                @SuppressLint("Range") String nameComaprison = cursor.getString(cursor.getColumnIndex(COLUMN_EVENT_NAME));
+                if (nameComaprison.equals(eventName)){
+                    return true;
+                }
+            } while (cursor.moveToNext());
+        }
+
+        cursor.close();
+        db.close();
+        return false;
+    }
+
 
 }
