@@ -1,6 +1,7 @@
 package com.example.gcc_application;
 
 import android.content.Intent;
+import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
@@ -24,8 +25,6 @@ public class RegistrationActivity extends AppCompatActivity {
         adminButton = findViewById(R.id.adminButton);
         clubMemberButton = findViewById(R.id.clubMemberButton);
         participantButton = findViewById(R.id.participantButton);
-
-        databaseHelper = new DatabaseHelper(this);
 
         adminButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -53,13 +52,16 @@ public class RegistrationActivity extends AppCompatActivity {
         String username = usernameEditText.getText().toString().trim();
         String password = passwordEditText.getText().toString().trim();
 
+        DatabaseHelper db = new DatabaseHelper(this);
+
         if (username.isEmpty() || password.isEmpty()) {
             Toast.makeText(RegistrationActivity.this, "Please fill all fields", Toast.LENGTH_SHORT).show();
             return;
         }
 
-        boolean isInserted = databaseHelper.addUser(username, password, role);
+        boolean isInserted = db.addUser(username, password, role);
         if (isInserted) {
+            db.addUser(username, password, role);
             Toast.makeText(RegistrationActivity.this, "Registered successfully as " + role, Toast.LENGTH_SHORT).show();
             // Optionally, you can redirect the user back to the LoginActivity after successful registration
             Intent intent = new Intent(RegistrationActivity.this, LoginActivity.class);
