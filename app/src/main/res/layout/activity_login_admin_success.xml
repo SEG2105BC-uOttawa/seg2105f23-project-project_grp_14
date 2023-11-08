@@ -19,18 +19,13 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:onClick="eventManagementBtnClick"
-        android:text="Event Managment" />
+        android:text="Event Management" />
 
     <Button
         android:id="@+id/accountManagmentBtn"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Account Managment" />
-
-    <Button
-        android:id="@+id/contentManagmentBtn"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="Content Managment" />
+        android:onClick="accountManagementBtnClick"
+        android:text="Account Management" />
 
 </LinearLayout>
