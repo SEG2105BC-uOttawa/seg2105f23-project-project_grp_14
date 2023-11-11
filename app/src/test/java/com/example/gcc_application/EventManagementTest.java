@@ -34,23 +34,23 @@ public class EventManagementTest {
     }
 
     @Test
-    public void testEventDeletion(String eventName) {
-        when(eventDatabaseHelper.deleteEvent(eventName)).thenReturn(true);
-        boolean result = eventDatabaseHelper.deleteEvent(eventName);
+    public void testEventDeletion() {
+        when(eventDatabaseHelper.deleteEvent("Event 1")).thenReturn(true);
+        boolean result = eventDatabaseHelper.deleteEvent("Event 1");
         assertTrue(result);
     }
 
     @Test
-    public void testAccountDeletion(String accountName) {
-        when(databaseHelper.deleteUser(accountName)).thenReturn(true);
-        boolean result = databaseHelper.deleteUser(accountName);
+    public void testAccountDeletion() {
+        when(databaseHelper.deleteUser("Account 1")).thenReturn(true);
+        boolean result = databaseHelper.deleteUser("Account 1");
         assertTrue(result);
     }
 
     @Test
-    public void testEventEdit(String eventName) {
-        when(eventDatabaseHelper.editEvent(eventName, "New Event", "Time Trial", "Description: test description \nDate: test date \nRoute: test route","Age requirement: test age requirement \nLevel requirement: test level requirement \nPace Requirement: test pace requirement")).thenReturn(true);
-        boolean result = eventDatabaseHelper.editEvent(eventName, "New Event", "Time Trial", "Description: test description \nDate: test date \nRoute: test route","Age requirement: test age requirement \nLevel requirement: test level requirement \nPace Requirement: test pace requirement");
+    public void testEventEdit() {
+        when(eventDatabaseHelper.editEvent("Event 1", "New Event", "Time Trial", "Description: test description \nDate: test date \nRoute: test route","Age requirement: test age requirement \nLevel requirement: test level requirement \nPace Requirement: test pace requirement")).thenReturn(true);
+        boolean result = eventDatabaseHelper.editEvent("Event 1", "New Event", "Time Trial", "Description: test description \nDate: test date \nRoute: test route","Age requirement: test age requirement \nLevel requirement: test level requirement \nPace Requirement: test pace requirement");
         assertTrue(result);
     }
 
