@@ -11,4 +11,93 @@
         android:text="Welcome Club Member!"
         android:textSize="24sp" />
 
+    <EditText
+        android:id="@+id/instagramLinkEditText"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        android:hint="Instagram Link"
+        android:inputType="text"
+        android:imeOptions="actionNext" />
+
+    <EditText
+        android:id="@+id/mainContactNameEditText"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/instagramLinkEditText"
+        android:layout_marginTop="16dp"
+        android:hint="Main Contact Name"
+        android:inputType="text"
+        android:imeOptions="actionNext" />
+
+    <EditText
+        android:id="@+id/phoneNumberEditText"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/mainContactNameEditText"
+        android:layout_marginTop="16dp"
+        android:hint="Phone Number"
+        android:inputType="phone"
+        android:imeOptions="actionDone" />
+
+    <EditText
+        android:id="@+id/addressEditText"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/phoneNumberEditText"
+        android:layout_marginTop="16dp"
+        android:hint="Address"
+        android:inputType="text"
+        android:imeOptions="actionDone" />
+
+    <MultiAutoCompleteTextView
+        android:id="@+id/eventMultiAutoCompleteTextView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/addressEditText"
+        android:layout_marginTop="16dp"
+        android:completionThreshold="1"
+        android:hint="Select Events"
+        android:imeOptions="actionDone"
+        android:inputType="textMultiLine" />
+
+    <Button
+        android:id="@+id/updateProfileBtn"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/eventMultiAutoCompleteTextView"
+        android:layout_marginTop="24dp"
+        android:onClick="updateProfileBtnClick"
+        android:text="Update Profile" />
+
+    <Button
+        android:id="@+id/associateEventsButton"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/updateProfileBtn"
+        android:layout_marginTop="16dp"
+        android:onClick="associateEventsBtnClick"
+        android:text="Associate Events" />
+
+    <Button
+        android:id="@+id/deleteEventButton"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/associateEventsButton"
+        android:layout_marginTop="16dp"
+        android:onClick="deleteEventBtnClick"
+        android:text="Delete Event" />
+
+    <Button
+        android:id="@+id/processRequestButton"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/deleteEventButton"
+        android:layout_marginTop="16dp"
+        android:onClick="processServiceRequestBtnClick"
+        android:text="Process Service Request" />
+
 </LinearLayout>
+
+
+

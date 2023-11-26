@@ -1,3 +1,4 @@
 <resources>
     <string name="app_name">GCC_Application</string>
+    <string name="update" />
 </resources>

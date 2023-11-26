@@ -7,22 +7,61 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import java.util.ArrayList;
+import java.util.List;
 
 
 public class DatabaseHelper extends SQLiteOpenHelper {
     private static final String DATABASE_NAME = "userdatabase";
-    private static final int DATABASE_VERSION = 2; // Updated database version
-    private static final String TABLE_USER = "users"; // Changed table name to "users"
+    private static final int DATABASE_VERSION = 2;
+    private static final String TABLE_USER = "users";
     private static final String COLUMN_ID = "id";
     private static final String COLUMN_USERNAME = "username";
     private static final String COLUMN_PASSWORD = "password";
-    private static final String COLUMN_ROLE = "role"; // Removed COLUMN_FIRSTNAME as it wasn't used in the given methods
+    private static final String COLUMN_ROLE = "role";
+    private static final String TABLE_CLUB_EVENT = "club_event";
+    private static final String COLUMN_CLUB_EVENT_ID = "club_event_id";
+    private static final String COLUMN_CLUB_ID_FK = "club_id";
+    private static final String COLUMN_EVENT_ID_FK = "event_id";
+    private static final String TABLE_CLUB = "clubs";
+    private static final String COLUMN_CLUB_ID = "club_id";
+    private static final String COLUMN_INSTAGRAM_LINK = "instagram_link";
+    private static final String COLUMN_MAIN_CONTACT_NAME = "main_contact_name";
+    private static final String COLUMN_PHONE_NUMBER = "phone_number";
+    private static final String COLUMN_ADDRESS = "address";
+    private static final String TABLE_SERVICE_REQUEST = "service_requests";
+    private static final String COLUMN_REQUEST_ID = "request_id";
+    private static final String COLUMN_IS_APPROVED = "is_approved";
 
+    private static final String TABLE_EVENT = "events";
+    private static final String COLUMN_EVENT_ID = "id";
+    private static final String COLUMN_EVENT_NAME = "event_name";
+    private static final String COLUMN_EVENT_TYPE = "event_type";
+    private static final String COLUMN_DETAILS = "event_details";
+    private static final String COLUMN_REQUIREMENTS = "event_requirements";
+    private static final String CREATE_CLUB_EVENT_TABLE = "CREATE TABLE " + TABLE_CLUB_EVENT + "("
+            + COLUMN_CLUB_EVENT_ID + " INTEGER PRIMARY KEY AUTOINCREMENT,"
+            + COLUMN_CLUB_ID_FK + " INTEGER,"
+            + COLUMN_EVENT_ID_FK + " INTEGER,"
+            + "FOREIGN KEY (" + COLUMN_CLUB_ID_FK + ") REFERENCES " + TABLE_USER + "(" + COLUMN_ID + "),"
+            + "FOREIGN KEY (" + COLUMN_EVENT_ID_FK + ") REFERENCES " + TABLE_EVENT + "(" + COLUMN_EVENT_ID + ")" + ")";
+    private static final String CREATE_EVENT_TABLE = "CREATE TABLE " + TABLE_EVENT + "("
+            + COLUMN_EVENT_ID + " INTEGER PRIMARY KEY AUTOINCREMENT,"
+            + COLUMN_EVENT_NAME + " TEXT,"
+            + COLUMN_EVENT_TYPE + " TEXT,"
+            + COLUMN_DETAILS + " TEXT,"
+            + COLUMN_REQUIREMENTS + " TEXT" + ")";
     private static final String CREATE_USER_TABLE = "CREATE TABLE " + TABLE_USER + "("
             + COLUMN_ID + " INTEGER PRIMARY KEY AUTOINCREMENT,"
             + COLUMN_USERNAME + " TEXT,"
             + COLUMN_PASSWORD + " TEXT,"
-            + COLUMN_ROLE + " TEXT" + ")"; // Updated table creation statement
+            + COLUMN_ROLE + " TEXT" + ")";
+    private static final String CREATE_CLUB_TABLE = "CREATE TABLE " + TABLE_CLUB + "("
+            + COLUMN_CLUB_ID + " INTEGER PRIMARY KEY AUTOINCREMENT,"
+            + COLUMN_INSTAGRAM_LINK + " TEXT,"
+            + COLUMN_MAIN_CONTACT_NAME + " TEXT,"
+            + COLUMN_PHONE_NUMBER + " TEXT,"
+            + COLUMN_ADDRESS + " TEXT" + ")";
+
 
     public DatabaseHelper(Context context) {
         super(context, DATABASE_NAME, null, DATABASE_VERSION);
@@ -31,7 +70,11 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     @Override
     public void onCreate(SQLiteDatabase db) {
         db.execSQL(CREATE_USER_TABLE);
+        db.execSQL(CREATE_CLUB_TABLE);
+        db.execSQL(CREATE_CLUB_EVENT_TABLE);
+        db.execSQL(CREATE_EVENT_TABLE);
     }
+
 
     @Override
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
@@ -114,6 +157,91 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         db.close();
 
         return result > 0;
+    }
+
+    public boolean deleteEventFromClub(String clubId, String eventId) {
+        SQLiteDatabase db = this.getWritableDatabase();
+
+        try {
+            db.beginTransaction();
+
+            // Remove the association between the club and the event
+            db.delete(TABLE_CLUB_EVENT, COLUMN_CLUB_ID_FK + "=? AND " + COLUMN_EVENT_ID_FK + "=?", new String[]{clubId, eventId});
+
+            db.setTransactionSuccessful();
+            return true;
+        } catch (Exception e) {
+            // Handle the exception, log or throw as needed
+            return false;
+        } finally {
+            db.endTransaction();
+            db.close();
+        }
+    }
+
+    public boolean updateClubProfile(String clubId, String instagramLink, String mainContactName, String phoneNumber, String address) {
+        SQLiteDatabase db = this.getWritableDatabase();
+
+        ContentValues values = new ContentValues();
+        values.put(COLUMN_INSTAGRAM_LINK, instagramLink);
+        values.put(COLUMN_MAIN_CONTACT_NAME, mainContactName);
+        values.put(COLUMN_PHONE_NUMBER, phoneNumber);
+        values.put(COLUMN_ADDRESS, address);
+
+        int result = db.update(TABLE_CLUB, values, COLUMN_CLUB_ID + "=?", new String[]{clubId});
+        db.close();
+
+        return result > 0;
+    }
+
+    public boolean associateEventsWithClub(String clubId, List<String> eventIds) {
+        SQLiteDatabase db = this.getWritableDatabase();
+
+        try {
+            db.beginTransaction();
+
+            // First, remove existing associations for the club
+            db.delete(TABLE_CLUB_EVENT, COLUMN_CLUB_ID_FK + "=?", new String[]{clubId});
+
+            // Now, associate the club with the selected events
+            for (String eventId : eventIds) {
+                ContentValues values = new ContentValues();
+                values.put(COLUMN_CLUB_ID_FK, clubId);
+                values.put(COLUMN_EVENT_ID_FK, eventId);
+                db.insert(TABLE_CLUB_EVENT, null, values);
+            }
+
+            db.setTransactionSuccessful();
+            return true;
+        } catch (Exception e) {
+            // Handle the exception, log or throw as needed
+            return false;
+        } finally {
+            db.endTransaction();
+            db.close();
+        }
+    }
+
+    public boolean updateServiceRequestStatus(String requestId, boolean isApproved) {
+        SQLiteDatabase db = this.getWritableDatabase();
+
+        try {
+            db.beginTransaction();
+
+            ContentValues values = new ContentValues();
+            values.put(COLUMN_IS_APPROVED, isApproved ? 1 : 0); // Assuming COLUMN_IS_APPROVED is an INTEGER column
+
+            int result = db.update(TABLE_SERVICE_REQUEST, values, COLUMN_REQUEST_ID + "=?", new String[]{requestId});
+
+            db.setTransactionSuccessful();
+            return result > 0;
+        } catch (Exception e) {
+            // Handle the exception, log or throw as needed
+            return false;
+        } finally {
+            db.endTransaction();
+            db.close();
+        }
     }
 }
 

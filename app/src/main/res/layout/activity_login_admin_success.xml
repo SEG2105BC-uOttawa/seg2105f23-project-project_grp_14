@@ -28,4 +28,11 @@
         android:onClick="accountManagementBtnClick"
         android:text="Account Management" />
 
+    <Button
+        android:id="@+id/clubManager"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:onClick="clubManagementBtnClick"
+        android:text="Club Management" />
+
 </LinearLayout>

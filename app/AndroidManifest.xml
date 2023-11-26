@@ -13,6 +13,9 @@
         android:theme="@style/Theme.GCC_Application"
         tools:targetApi="31">
         <activity
+            android:name=".ClubProfileCompletionActivity"
+            android:exported="false" />
+        <activity
             android:name=".LoginParticipantSuccess"
             android:exported="false">
             <meta-data
@@ -51,11 +54,9 @@
             android:exported="true" />
         <activity android:name=".WelcomeActivity" />
         <activity android:name=".RegistrationActivity" />
-        <activity android:name=".AdminEventManagement"/>
+        <activity android:name=".AdminEventManagment"/>
         <activity android:name=".AdminAccountManagement"/>
         <activity android:name=".EventRegistration"/>
-
-
     </application>
 
 </manifest>
