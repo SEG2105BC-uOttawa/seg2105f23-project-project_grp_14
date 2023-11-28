@@ -25,10 +25,23 @@ public class LoginAdminSuccess extends AppCompatActivity {
 
         welcomeTextView.setText("Welcome, " + username + "!\nRole: " + role);
 
+<<<<<<< HEAD
     }
 
     public void eventManagementBtnClick(View view){
         Intent myIntent = new Intent(LoginAdminSuccess.this, AdminEventManagement.class);
+        startActivity(myIntent);
+=======
+>>>>>>> 5ebd5569295bf56ed7eafcf2522b07f3b817a0ce
+    }
+
+    public void eventManagementBtnClick(View view){
+        Intent myIntent = new Intent(LoginAdminSuccess.this, AdminEventManagement.class);
+        startActivity(myIntent);
+    }
+
+    public void accountManagementBtnClick(View view){
+        Intent myIntent = new Intent(LoginAdminSuccess.this, AdminAccountManagement.class);
         startActivity(myIntent);
     }
 }
