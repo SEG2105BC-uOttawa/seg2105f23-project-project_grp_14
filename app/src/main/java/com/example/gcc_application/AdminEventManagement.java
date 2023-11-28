@@ -12,14 +12,8 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import java.util.ArrayList;
-<<<<<<< HEAD
-import android.database.Cursor;
-import android.database.sqlite.SQLiteDatabase;
-import android.database.sqlite.SQLiteOpenHelper;
-=======
 
 import android.database.sqlite.SQLiteDatabase;
->>>>>>> 5ebd5569295bf56ed7eafcf2522b07f3b817a0ce
 import android.widget.Toast;
 
 public class AdminEventManagement extends AppCompatActivity {
@@ -27,11 +21,7 @@ public class AdminEventManagement extends AppCompatActivity {
     static String event_details;
     static String event_type;
     static String event_name;//used for editing events
-<<<<<<< HEAD
-    static boolean editEvent = false;
-=======
     boolean editEvent = false;
->>>>>>> 5ebd5569295bf56ed7eafcf2522b07f3b817a0ce
     ListView listOfEvents;
     private ArrayAdapter<String> adapter;
     private ArrayList<String> eventList;
@@ -54,7 +44,15 @@ public class AdminEventManagement extends AppCompatActivity {
         EventDatabaseHelper dbHelper = new EventDatabaseHelper(this);
         SQLiteDatabase db = dbHelper.getReadableDatabase();
 
-        eventList = dbHelper.getAllRecords();
+        Intent intent = getIntent();
+        String username = intent.getStringExtra("USERNAME");
+
+       if (username.equals("admin")){
+            eventList = dbHelper.getAllRecords();
+       } else{
+            eventList = dbHelper.getAllRecords(username);
+        }
+
 
         // Create an ArrayAdapter to bind the ArrayList to the ListView
         adapter = new ArrayAdapter<>(this, android.R.layout.simple_list_item_1, eventList);
@@ -89,11 +87,13 @@ public class AdminEventManagement extends AppCompatActivity {
 
 
                 event_type = "Time Trial";
+                Intent intent = getIntent();
+                String username = intent.getStringExtra("USERNAME");
+
+
                 Intent registerIntent = new Intent(AdminEventManagement.this, EventRegistration.class);
-<<<<<<< HEAD
-=======
                 registerIntent.putExtra("event type", "Time Trial");
->>>>>>> 5ebd5569295bf56ed7eafcf2522b07f3b817a0ce
+                registerIntent.putExtra("username", username);
                 startActivity(registerIntent);
             }
         });
@@ -110,11 +110,12 @@ public class AdminEventManagement extends AppCompatActivity {
 
 
                 event_type = "Road Stage Race";
+                Intent intent = getIntent();
+                String username = intent.getStringExtra("USERNAME");
+
                 Intent registerIntent = new Intent(AdminEventManagement.this, EventRegistration.class);
-<<<<<<< HEAD
-=======
                 registerIntent.putExtra("event type", "Road Stage Race");
->>>>>>> 5ebd5569295bf56ed7eafcf2522b07f3b817a0ce
+                registerIntent.putExtra("username", username);
                 startActivity(registerIntent);
             }
         });
@@ -130,19 +131,18 @@ public class AdminEventManagement extends AppCompatActivity {
 
 
                 event_type = "Road Race";
+                Intent intent = getIntent();
+                String username = intent.getStringExtra("USERNAME");
+
                 Intent registerIntent = new Intent(AdminEventManagement.this, EventRegistration.class);
-<<<<<<< HEAD
-=======
                 registerIntent.putExtra("event type", "Road Race");
->>>>>>> 5ebd5569295bf56ed7eafcf2522b07f3b817a0ce
+                registerIntent.putExtra("username", username);
                 startActivity(registerIntent);
             }
         });
 
         builder.create().show();
     }
-
-
 
     public static String getEventDetails(){
         return event_details;
@@ -163,16 +163,10 @@ public class AdminEventManagement extends AppCompatActivity {
                 event_name = selectedItem;
                 editEvent = true;
                 Intent registerIntent = new Intent(AdminEventManagement.this, EventRegistration.class);
-<<<<<<< HEAD
-                startActivity(registerIntent);
-
-                //Toast.makeText(getApplicationContext(), "You clicked Yes!", Toast.LENGTH_SHORT).show();
-=======
                 registerIntent.putExtra("editing event", editEvent);
                 registerIntent.putExtra("event type", database.getEventType(event_name));
                 startActivity(registerIntent);
 
->>>>>>> 5ebd5569295bf56ed7eafcf2522b07f3b817a0ce
             }
         });
         builder.setNegativeButton("Delete Event", new DialogInterface.OnClickListener() {
@@ -191,5 +185,3 @@ public class AdminEventManagement extends AppCompatActivity {
 
     }
 }
-
-

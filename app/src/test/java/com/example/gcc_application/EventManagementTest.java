@@ -21,15 +21,15 @@ public class EventManagementTest {
 
     @Test
     public void testEventCreation() {
-        when(eventDatabaseHelper.addEvent("Event 1", "Time Trial", "Description: test description \nDate: test date \nRoute: test route", "Age requirement: test age requirement \nLevel requirement: test level requirement \nPace Requirement: test pace requirement")).thenReturn(true);
-        boolean result = eventDatabaseHelper.addEvent("Event 1", "Time Trial", "Description: test description \nDate: test date \nRoute: test route", "Age requirement: test age requirement \nLevel requirement: test level requirement \nPace Requirement: test pace requirement");
+        when(eventDatabaseHelper.addEvent("Event 1", "Time Trial", "Description: test description \nDate: test date \nRoute: test route", "Age requirement: test age requirement \nLevel requirement: test level requirement \nPace Requirement: test pace requirement", "admin")).thenReturn(true);
+        boolean result = eventDatabaseHelper.addEvent("Event 1", "Time Trial", "Description: test description \nDate: test date \nRoute: test route", "Age requirement: test age requirement \nLevel requirement: test level requirement \nPace Requirement: test pace requirement", "admin");
         assertTrue(result);
     }
 
     @Test
     public void testEventCreationFailure() {
-        when(eventDatabaseHelper.addEvent("Event 1", "Time Trial", null, "Age requirement: test age requirement \nLevel requirement: test level requirement \nPace Requirement: test pace requirement")).thenReturn(false);
-        boolean result = eventDatabaseHelper.addEvent("Event 1", "Time Trial", null, "Age requirement: test age requirement \nLevel requirement: test level requirement \nPace Requirement: test pace requirement");
+        when(eventDatabaseHelper.addEvent("Event 1", "Time Trial", null, "Age requirement: test age requirement \nLevel requirement: test level requirement \nPace Requirement: test pace requirement", "admin")).thenReturn(false);
+        boolean result = eventDatabaseHelper.addEvent("Event 1", "Time Trial", null, "Age requirement: test age requirement \nLevel requirement: test level requirement \nPace Requirement: test pace requirement", "admin");
         assertFalse(result);
     }
 

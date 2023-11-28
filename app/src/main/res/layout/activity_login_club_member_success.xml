@@ -6,9 +6,24 @@
     android:orientation="vertical">
 
     <TextView
+        android:id="@+id/welcomeTextView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Welcome Club Member!"
         android:textSize="24sp" />
+
+    <Button
+        android:id="@+id/profileManagement"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:onClick="profileBtn"
+        android:text="Profile Management" />
+
+    <Button
+        android:id="@+id/eventManagement"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:onClick="eventBtn"
+        android:text="Event Management" />
 
 </LinearLayout>
