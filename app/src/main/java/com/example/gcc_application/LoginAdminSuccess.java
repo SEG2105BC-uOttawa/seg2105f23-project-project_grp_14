@@ -28,7 +28,16 @@ public class LoginAdminSuccess extends AppCompatActivity {
     }
 
     public void eventManagementBtnClick(View view){
+        Intent intent = getIntent();
+        String username = intent.getStringExtra("USERNAME");
+
         Intent myIntent = new Intent(LoginAdminSuccess.this, AdminEventManagement.class);
+        myIntent.putExtra("USERNAME", username);
+        startActivity(myIntent);
+    }
+
+    public void accountManagementBtnClick(View view){
+        Intent myIntent = new Intent(LoginAdminSuccess.this, AdminAccountManagement.class);
         startActivity(myIntent);
     }
 }

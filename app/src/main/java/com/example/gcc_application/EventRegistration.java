@@ -14,16 +14,18 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 
 public class EventRegistration extends AppCompatActivity {
 
     EditText eventName, eventDate, eventRoute, ageRequirement, levelRequirement, paceRequirement;
-   TextView eventDetails;
+    TextView eventDetails;
     Button register_button;
     EventDatabaseHelper database;
 
-    String defaultEventName, defaultEventDate, defaultEventRoute, defaultAgeRequirement, defaultLevelRequirement, defaultPaceRequirement;
+    String defaultEventName, defaultEventDate, defaultEventRoute, defaultAgeRequirement, defaultLevelRequirement, defaultPaceRequirement, event_type;
+
 
     @SuppressLint("SetTextI18n")
     @Override
@@ -42,7 +44,12 @@ public class EventRegistration extends AppCompatActivity {
 
         database = new EventDatabaseHelper(this);
 
-        switch (AdminEventManagement.event_type){
+        Intent intent = getIntent();
+        boolean editingEvent = intent.getBooleanExtra("editing event", false);
+        String eventType = intent.getStringExtra("event type");
+        String userName = intent.getStringExtra("username");
+
+        switch (eventType){
             case ("Time Trial"):
                 eventDetails.setText(eventDetails.getText()+ "Time trials, often referred to as TTs, are individual races against\n"
                         +"the clock. Cyclists start at intervals and race alone to complete a set course as\n"+
@@ -65,7 +72,7 @@ public class EventRegistration extends AppCompatActivity {
                 throw new IllegalStateException("Unexpected value: " + AdminEventManagement.event_type);
         }
 
-        if (AdminEventManagement.editEvent){//if we're coming to this activity to edit an event
+        if (editingEvent){//if we're coming to this activity to edit an event
             String details = database.getEventDetails(AdminEventManagement.event_name);
             String requirements = database.getEventRequirements(AdminEventManagement.event_name);
 
@@ -76,14 +83,12 @@ public class EventRegistration extends AppCompatActivity {
             Pattern levelRequirementPattern = Pattern.compile("Level requirement: (.+?)\\n");
             Pattern paceRequirementPattern = Pattern.compile("Pace Requirement: (.+)$");
 
-
             // Create Matcher objects for each pattern
             Matcher dateMatcher = datePattern.matcher(details);
             Matcher routeMatcher = routePattern.matcher(details);
             Matcher ageRequirementMatcher = ageRequirementPattern.matcher(requirements);
             Matcher levelRequirementMatcher = levelRequirementPattern.matcher(requirements);
             Matcher paceRequirementMatcher = paceRequirementPattern.matcher(requirements);
-
 
             // Extract and print the matched values
             if (dateMatcher.find()) {
@@ -92,7 +97,7 @@ public class EventRegistration extends AppCompatActivity {
             }
 
             if (routeMatcher.find()) {
-                String event_route = dateMatcher.group(1);
+                String event_route = routeMatcher.group(1);
                 eventRoute.setText(event_route);
             }
 
@@ -136,30 +141,80 @@ public class EventRegistration extends AppCompatActivity {
             if (event_name.isEmpty() || event_route.isEmpty() || event_date.isEmpty() || age_requirement.isEmpty() || level_requirement.isEmpty() || pace_requirement.isEmpty()) {
                 Toast.makeText(EventRegistration.this, "Please fill all fields", Toast.LENGTH_SHORT).show();
                 return;
+            } else if (database.eventNameExists(event_name)) {
+                Toast.makeText(EventRegistration.this, "Event name already exists", Toast.LENGTH_SHORT).show();
+                return;
             }
 
-            if (AdminEventManagement.editEvent) {
+            if (editingEvent) {
 
-                database.editEvent(defaultEventName , "COLUMN_EVENT_NAME", event_name);
+                AlertDialog.Builder typeChange = new AlertDialog.Builder(EventRegistration.this);
+                typeChange.setTitle("New Event Type");
+                typeChange.setMessage("Select type of event:");
 
-                event_details = "\nDate: " + event_date + "\nRoute: " + event_route;
-                database.editEvent(event_name , "COLUMN_DETAILS", event_details);
+                typeChange.setPositiveButton("Time Trial", new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int id) {
+                        // Start EventRegistrationActivity
 
-                event_requirements = "Age requirement: " + age_requirement + "\nLevel requirement: " + level_requirement + "\nPace Requirement: " + pace_requirement;
-                database.editEvent(defaultEventName , "COLUMN_REQUIREMENTS", event_requirements);
+                        String eventDetails = "Time trials, often referred to as \"TTs,\" are individual races against\n" +
+                                "the clock. Cyclists start at intervals and race alone to complete a set course as\n" +
+                                "quickly as possible. It's a test of a rider's ability to maintain a consistent pace and\n" +
+                                "maximize speed";
 
-                Toast.makeText(EventRegistration.this, "Event updated successfully", Toast.LENGTH_SHORT).show();
-                Intent intent = new Intent(EventRegistration.this, AdminEventManagement.class);
-                startActivity(intent);
-                finish();
+                        database.editEvent(defaultEventName, event_name, "Time Trial", event_details, event_requirements);
+
+                        Toast.makeText(EventRegistration.this, "Event updated successfully", Toast.LENGTH_SHORT).show();
+                        Intent registerIntent = new Intent(EventRegistration.this, AdminEventManagement.class);
+                        startActivity(registerIntent);
+                        finish();                    }
+                });
+
+
+                typeChange.setNegativeButton("Road Stage Race", new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int id) {
+                        // Handle Road Stage Race button click
+
+                        String eventDetails = "Road stage races are multi-day events composed of multiple\n" +
+                                "stages, each with its own route and terrain. Cyclists compete over several days,\n" +
+                                "and the overall winner is determined by the lowest cumulative time across all\n" +
+                                "stages. Events like the Tour de France are classic examples";
+
+                        database.editEvent(defaultEventName, event_name, "Road Stage Race", event_details, event_requirements);
+
+                        Toast.makeText(EventRegistration.this, "Event updated successfully", Toast.LENGTH_SHORT).show();
+                        Intent registerIntent = new Intent(EventRegistration.this, AdminEventManagement.class);
+                        startActivity(registerIntent);
+                        finish();                    }
+                });
+
+                typeChange.setNeutralButton("Road Race", new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int id) {
+                        // Handle Road Race button click
+
+                        String eventDetails = "Road races are competitive cycling events held on paved roads.\n" +
+                                "Cyclists race in a group, and the winner is typically determined by the first rider\n" +
+                                "to cross the finish line. Road races vary in distance and can be one-day events or\n" +
+                                "part of a stage race";
+
+                        database.editEvent(defaultEventName, event_name, "Road Race", event_details, event_requirements);
+
+                        Toast.makeText(EventRegistration.this, "Event updated successfully", Toast.LENGTH_SHORT).show();
+                        Intent registerIntent = new Intent(EventRegistration.this, AdminEventManagement.class);
+                        startActivity(registerIntent);
+                        finish();
+
+                    }
+                });
+
+                typeChange.create().show();
+
 
             } else {
-
-                boolean isInserted = database.addEvent(event_name, AdminEventManagement.getEventType(), event_details, event_requirements);
+                boolean isInserted = database.addEvent(event_name, AdminEventManagement.getEventType(), event_details, event_requirements, userName);
                 if (isInserted) {
                     Toast.makeText(EventRegistration.this, "Event registered successfully", Toast.LENGTH_SHORT).show();
-                    Intent intent = new Intent(EventRegistration.this, AdminEventManagement.class);
-                    startActivity(intent);
+                    Intent registerIntent = new Intent(EventRegistration.this, AdminEventManagement.class);
+                    startActivity(registerIntent);
                     finish();
                 } else {
                     Toast.makeText(EventRegistration.this, "Registration error", Toast.LENGTH_SHORT).show();

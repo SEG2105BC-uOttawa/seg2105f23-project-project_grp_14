@@ -52,7 +52,10 @@
         <activity android:name=".WelcomeActivity" />
         <activity android:name=".RegistrationActivity" />
         <activity android:name=".AdminEventManagement"/>
+        <activity android:name=".AdminAccountManagement"/>
         <activity android:name=".EventRegistration"/>
+        <activity android:name=".ClubProfileActivity"/>
+        <activity android:name=".ClubProfile"/>
 
     </application>
 
