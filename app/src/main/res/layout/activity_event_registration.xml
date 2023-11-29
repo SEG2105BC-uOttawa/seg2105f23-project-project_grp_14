@@ -88,8 +88,4 @@
             android:onClick="register_button_click"
             android:text="Register Event" />
     </LinearLayout>
-<<<<<<< HEAD
 </androidx.constraintlayout.widget.ConstraintLayout>
-=======
-</androidx.constraintlayout.widget.ConstraintLayout>
->>>>>>> 5ebd5569295bf56ed7eafcf2522b07f3b817a0ce
