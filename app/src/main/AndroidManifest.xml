@@ -56,6 +56,9 @@
         <activity android:name=".EventRegistration"/>
         <activity android:name=".ClubProfileActivity"/>
         <activity android:name=".ClubProfile"/>
+        <activity android:name=".Rating"/>
+        <activity android:name=".EventDetails"/>
+        <activity android:name=".EventSearch"/>
 
     </application>
 
