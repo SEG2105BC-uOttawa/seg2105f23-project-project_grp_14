@@ -62,8 +62,8 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:ems="10"
-            android:hint="Age Range"
-            android:inputType="text" />
+            android:hint="Minimum Age"
+            android:inputType="number" />
 
         <EditText
             android:id="@+id/levelRequirement"
@@ -71,7 +71,7 @@
             android:layout_height="wrap_content"
             android:ems="10"
             android:hint="Experience Level"
-            android:inputType="text" />
+            android:inputType="number" />
 
         <EditText
             android:id="@+id/paceRequirement"
@@ -79,7 +79,17 @@
             android:layout_height="wrap_content"
             android:ems="10"
             android:hint="Pace"
-            android:inputType="text" />
+            android:inputType="number" />
+
+        <Button
+            android:id="@+id/register_button"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:onClick="register_button_click"
+            android:text="Register Event" />
+    </LinearLayout>
+</androidx.constraintlayout.widget.ConstraintLayout>
+
 
         <Button
             android:id="@+id/register_button"
