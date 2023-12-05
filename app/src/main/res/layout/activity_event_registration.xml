@@ -90,12 +90,3 @@
     </LinearLayout>
 </androidx.constraintlayout.widget.ConstraintLayout>
 
-
-        <Button
-            android:id="@+id/register_button"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:onClick="register_button_click"
-            android:text="Register Event" />
-    </LinearLayout>
-</androidx.constraintlayout.widget.ConstraintLayout>
