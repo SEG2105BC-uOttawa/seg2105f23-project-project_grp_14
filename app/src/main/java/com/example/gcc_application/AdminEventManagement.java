@@ -50,7 +50,7 @@ public class AdminEventManagement extends AppCompatActivity {
        if (username.equals("admin")){
             eventList = dbHelper.getAllRecords();
        } else{
-            eventList = dbHelper.getAllRecords(username);
+            eventList = dbHelper.getAllRecords("event_registree", username);
         }
 
 

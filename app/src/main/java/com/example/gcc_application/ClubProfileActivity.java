@@ -1,16 +1,18 @@
 package com.example.gcc_application;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.Button;
-import android.widget.Toast;
 import androidx.appcompat.app.AppCompatActivity;
 
 public class ClubProfileActivity extends AppCompatActivity {
     private EditText instagramEditText, contactNameEditText, contactPhoneEditText;
     private Button saveProfileButton;
     private DatabaseHelper databaseHelper;
+    private EditText etRating, etComment;
+    private Button btnConfirm;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -36,6 +38,8 @@ public class ClubProfileActivity extends AppCompatActivity {
                 saveProfile();
             }
         });
+
+
     }
 
     private void loadProfile() {
@@ -72,8 +76,8 @@ public class ClubProfileActivity extends AppCompatActivity {
 
         // If validation passes, proceed to save the profile
         if (isValid) {
-            ClubProfile profile = new ClubProfile(instagramLink, contactName, phoneNumber);
-            databaseHelper.saveClubProfile(profile, ClubProfileActivity.this);
+  //////          ClubProfile profile = new ClubProfile(instagramLink, contactName, phoneNumber);
+            databaseHelper.saveClubProfile(instagramLink, contactName, phoneNumber, ClubProfileActivity.this);
         }
     }
 
