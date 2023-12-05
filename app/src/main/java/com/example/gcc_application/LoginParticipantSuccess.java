@@ -25,6 +25,7 @@ public class LoginParticipantSuccess extends AppCompatActivity {
     private ArrayList<String> eventList;
     ListView listOfEnteredEvents;
     EventDatabaseHelper database;
+
     @SuppressLint("MissingInflatedId")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -163,3 +164,5 @@ public class LoginParticipantSuccess extends AppCompatActivity {
 
         AlertDialog dialog = builder.create();
         dialog.show();
+    }
+}
